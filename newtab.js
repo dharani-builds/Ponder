@@ -1,4 +1,4 @@
-const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQriQICYRLJAacQ-5gE7l7T4ZoDNbF1lL9uf4iX9SSkim1NW_0YRyemuB-0fG0LJOfcjqghyuvDR8lf/pub?gid=1886438249&single=true&output=csv";
+const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQriQICYRLJAacQ-5gE7l7T4ZoDNbF1lL9uf4iX9SSkim1NW_0YRyemuB-0fG0LJOfcjqghyuvDR8lf/pub?gid=1886438249&single=true&output=tsv";
 
 const FALLBACK_QUOTES = [
   { quote: "Do good. Have fun. Be kind.", contributor_name: "", social_link: "" },
@@ -8,9 +8,9 @@ const FALLBACK_QUOTES = [
 
 function parseCSV(text) {
   const rows = text.trim().split("\n");
-  const headers = rows[0].split(",").map(h => h.trim().toLowerCase());
+  const headers = rows[0].split("\t").map(h => h.trim().toLowerCase());
   return rows.slice(1).map(row => {
-    const values = row.split(",").map(v => v.trim().replace(/^"|"$/g, ""));
+    const values = row.split("\t").map(v => v.trim().replace(/^"|"$/g, ""));
     const obj = {};
     headers.forEach((h, i) => obj[h] = values[i] || "");
     return obj;
@@ -18,25 +18,25 @@ function parseCSV(text) {
 }
 
 function showQuote(quotes) {
-  // Get previously shown indices
-  let shownIndices = JSON.parse(localStorage.getItem("ponder_shown") || "[]");
+  // Get the current shuffled queue
+  let queue = JSON.parse(localStorage.getItem("ponder_queue") || "[]");
 
-  // If all quotes have been shown, reset
-  if (shownIndices.length >= quotes.length) {
-    shownIndices = [];
+  // If queue is empty or doesn't match current quotes length, rebuild it
+  if (queue.length === 0) {
+    // Create a fresh shuffled array of all indices
+    queue = quotes.map((_, i) => i);
+    // Fisher-Yates shuffle — proper random, no bias
+    for (let i = queue.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [queue[i], queue[j]] = [queue[j], queue[i]];
+    }
   }
 
-  // Pick a random index that hasn't been shown yet
-  const remaining = quotes
-    .map((_, i) => i)
-    .filter(i => !shownIndices.includes(i));
-  const randomIndex = remaining[Math.floor(Math.random() * remaining.length)];
+  // Take the first index from the queue
+  const index = queue.shift();
+  localStorage.setItem("ponder_queue", JSON.stringify(queue));
 
-  // Save it
-  shownIndices.push(randomIndex);
-  localStorage.setItem("ponder_shown", JSON.stringify(shownIndices));
-
-  const current = quotes[randomIndex];
+  const current = quotes[index];
 
   document.getElementById("quote").textContent = current.quote;
   document.getElementById("quote").classList.add("visible");
