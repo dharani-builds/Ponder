@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Ponder",
-    "version": "1.0",
+    "version": "2.0",
     "description": "Live through your moments.",
     "chrome_url_overrides": {
       "newtab": "newtab.html"

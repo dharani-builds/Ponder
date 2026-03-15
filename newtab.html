@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Ponder</title>
-  <link rel="stylesheet" href="newtab.css"/>
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="theme-color" content="#060606"/>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Space+Mono:wght@400&display=swap" rel="stylesheet"/>
+    <title>Ponder</title>
+    <style>
+      html { background-color: #060606; min-height: 100vh; }
+      body { background-color: #060606; min-height: 100vh; margin: 0; }
+    </style>
+    <link rel="stylesheet" href="newtab.css"/>
+  </head>
 <body>
 
   <div class="stripes"></div>
@@ -13,6 +19,10 @@
   <div class="vignette"></div>
 
   <p id="quote"></p>
+
+  <div class="contributor" id="contributor">
+    Contributed by <a id="contributor-link" href="#" target="_blank"></a>
+  </div>
 
   <script src="newtab.js"></script>
 </body>
